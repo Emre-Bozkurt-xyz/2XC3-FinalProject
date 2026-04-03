@@ -114,3 +114,22 @@ def init_d(G):
                 d[i][j] = G.w(i, j)
         d[i][i] = 0
     return d
+
+#DIJKSTRA APPROX FUNCTION, Author: Sreyo Biswas
+def dijkstra_approx(G, source, k):
+    dist = {}
+    num_relaxations = {}
+    Q = min_heap.MinHeap([])
+
+    for node in G.adj.keys():
+        dist[node] = float("inf")
+        num_relaxations[node] = 0
+        Q.insert(min_heap.Element(node, float("inf")))
+    dist[source] = 0
+    Q.decrease_key(source, 0)
+
+
+
+
+
+
