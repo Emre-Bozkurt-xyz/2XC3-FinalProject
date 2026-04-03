@@ -117,6 +117,8 @@ def init_d(G):
 
 #DIJKSTRA APPROX FUNCTION, Author: Sreyo Biswas
 def dijkstra_approx(G, source, k):
+
+    #instantiate the distance and num_relaxations dictionaries, and the priority queue
     dist = {}
     num_relaxations = {}
     Q = min_heap.MinHeap([])
@@ -124,9 +126,29 @@ def dijkstra_approx(G, source, k):
     for node in G.adj.keys():
         dist[node] = float("inf")
         num_relaxations[node] = 0
+        #add all nodes to the priority queue with initial distance of infinity
         Q.insert(min_heap.Element(node, float("inf")))
+    #decrease the key of the source node to 0, since the distance from the source to itself is 0
     dist[source] = 0
     Q.decrease_key(source, 0)
+
+    while not Q.is_empty():
+        #get the node with the smallest distance from the source
+        current_node = Q.extract_min().value
+        for neighbour in G.adj[current_node]:
+            #calculate the updated distance to the neighbour through the current node
+            new_dist = dist[current_node] + G.w(current_node, neighbour)
+            #if the new distance is smaller than the previous distance and the number of relaxations for the neighbour is < k, update both distances and increase num relaxations
+            if new_dist < dist[neighbour] and num_relaxations[neighbour] < k:
+                dist[neighbour] = new_dist
+                num_relaxations[neighbour] += 1
+                #update the priority queue with the new distance
+                Q.decrease_key(neighbour, new_dist)
+    #return distance dictionary
+    return dist
+
+
+
 
 
 
