@@ -138,7 +138,7 @@ def dijkstra_approx(G, source, k):
         for neighbour in G.adj[current_node]:
             #calculate the updated distance to the neighbour through the current node
             new_dist = dist[current_node] + G.w(current_node, neighbour)
-            #if the new distance is smaller than the previous distance and the number of relaxations for the neighbour is < k, update both distances and increase num relaxations
+            #relax if the new distance is shorter and relaxation limit has not been reached
             if new_dist < dist[neighbour] and num_relaxations[neighbour] < k:
                 dist[neighbour] = new_dist
                 num_relaxations[neighbour] += 1
@@ -147,7 +147,30 @@ def dijkstra_approx(G, source, k):
     #return distance dictionary
     return dist
 
+#BELLMAN-FORD APPROX FUNCTION, Author: Sreyo Biswas
+def bellman_ford_approx(G, source, k):
+    #instantiate the distance and num_relaxations dictionaries and get the list of nodes in the graph
+    nodes = list(G.adj.keys())
+    dist = {}
+    num_relaxations = {}
 
+    for node in G.adj.keys():
+        #initialize all distances to infinity and num_relaxations to 0
+        dist[node] = float("inf")
+        num_relaxations[node] = 0
+    dist[source] = 0
+
+    for i in range(1, G.number_of_nodes()):
+        for node in nodes:
+            for neighbour in G.adj[node]:
+                #calculate the updated distance to the neighbour through the current node
+                new_dist = dist[node] + G.w(node, neighbour)
+                #relax if the new distance is shorter and relaxation limit has not been reached
+                if new_dist < dist[neighbour] and num_relaxations[neighbour] < k:
+                    dist[neighbour] = new_dist
+                    num_relaxations[neighbour] += 1
+    #return distance dictionary
+    return dist
 
 
 
