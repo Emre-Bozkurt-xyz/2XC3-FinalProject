@@ -179,6 +179,18 @@ def bellman_ford_approx(G, source, k):
     #return distance dictionary
     return dist
 
-
-
+#To vary m, the following function had to be created, Author: Sreyo Biswas
+def create_random_graph(n, m, max_weight):
+    G = DirectedWeightedGraph()
+    for i in range(n):
+        G.add_node(i)
+    
+    edges_added = 0
+    while edges_added < m:
+        u = random.randint(0, n - 1)
+        v = random.randint(0, n - 1)
+        if u != v and not G.are_connected(u, v):
+            G.add_edge(u, v, random.randint(1, max_weight))
+            edges_added += 1
+    return G
 
