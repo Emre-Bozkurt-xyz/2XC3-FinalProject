@@ -143,11 +143,11 @@ def dijkstra_approx(G, source, k):
             new_dist = dist[current_node] + G.w(current_node, neighbour)
             #relax if the new distance is shorter and relaxation limit has not been reached
             if new_dist < dist[neighbour] and num_relaxations[neighbour] < k:
-                if neighbour in Q.map:
                     dist[neighbour] = new_dist
                     num_relaxations[neighbour] += 1
-                    #update the priority queue with the new distance
-                    Q.decrease_key(neighbour, new_dist)
+                    if neighbour in Q.map:
+                        #update the priority queue with the new distance
+                        Q.decrease_key(neighbour, new_dist)
                     pred[neighbour] = current_node
     #return distance dictionary
     return dist
