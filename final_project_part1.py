@@ -119,6 +119,7 @@ def init_d(G):
 def dijkstra_approx(G, source, k):
 
     #instantiate the distance and num_relaxations dictionaries, and the priority queue
+    pred = {}
     dist = {}
     num_relaxations = {}
     Q = min_heap.MinHeap([])
@@ -134,22 +135,27 @@ def dijkstra_approx(G, source, k):
 
     while not Q.is_empty():
         #get the node with the smallest distance from the source
-        current_node = Q.extract_min().value
+        current_element = Q.extract_min()
+        current_node = current_element.value
+        dist[current_node] = current_element.key
         for neighbour in G.adj[current_node]:
             #calculate the updated distance to the neighbour through the current node
             new_dist = dist[current_node] + G.w(current_node, neighbour)
             #relax if the new distance is shorter and relaxation limit has not been reached
             if new_dist < dist[neighbour] and num_relaxations[neighbour] < k:
-                dist[neighbour] = new_dist
-                num_relaxations[neighbour] += 1
-                #update the priority queue with the new distance
-                Q.decrease_key(neighbour, new_dist)
+                if neighbour in Q.map:
+                    dist[neighbour] = new_dist
+                    num_relaxations[neighbour] += 1
+                    #update the priority queue with the new distance
+                    Q.decrease_key(neighbour, new_dist)
+                    pred[neighbour] = current_node
     #return distance dictionary
     return dist
 
 #BELLMAN-FORD APPROX FUNCTION, Author: Sreyo Biswas
 def bellman_ford_approx(G, source, k):
     #instantiate the distance and num_relaxations dictionaries and get the list of nodes in the graph
+    pred = {}
     nodes = list(G.adj.keys())
     dist = {}
     num_relaxations = {}
@@ -160,7 +166,7 @@ def bellman_ford_approx(G, source, k):
         num_relaxations[node] = 0
     dist[source] = 0
 
-    for i in range(1, G.number_of_nodes()):
+    for i in range(G.number_of_nodes()):
         for node in nodes:
             for neighbour in G.adj[node]:
                 #calculate the updated distance to the neighbour through the current node
@@ -169,11 +175,9 @@ def bellman_ford_approx(G, source, k):
                 if new_dist < dist[neighbour] and num_relaxations[neighbour] < k:
                     dist[neighbour] = new_dist
                     num_relaxations[neighbour] += 1
+                    pred[neighbour] = node
     #return distance dictionary
     return dist
-
-
-
 
 
 
